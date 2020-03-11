@@ -79,18 +79,18 @@
 
 
 
-<meta name="description" content="路径的差异Java中的Class、ClassLoader类都提供了getResource、getResourceAsStream方法来加载资源 但Class类和ClassLoader类在资源加载的路径上存在着差异 在当前用户的home目录下创建Maven项目resource-demo 并在项目下新建测试类joveleex.demo.App，编写代码测试 Class方式123456789// 通过C">
+<meta name="description" content="路径的差异Class和ClassLoader都提供了两种方法来加载资源  getResource(String): URL getResourceAsStream(String): InputStream  但使用Class加载资源和使用ClassLoader加载资源时填写相同的路径却会得到不同的结果 如下以使用getResource加载各种目录为例比较两者差异 Class方式123456789/">
 <meta name="keywords" content="Java Class ClassLoader">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Java加载资源时的路径问题">
 <meta property="og:url" content="http://yoursite.com/2020/03/10/Java加载资源时的路径问题/index.html">
 <meta property="og:site_name" content="joveleex-blog">
-<meta property="og:description" content="路径的差异Java中的Class、ClassLoader类都提供了getResource、getResourceAsStream方法来加载资源 但Class类和ClassLoader类在资源加载的路径上存在着差异 在当前用户的home目录下创建Maven项目resource-demo 并在项目下新建测试类joveleex.demo.App，编写代码测试 Class方式123456789// 通过C">
+<meta property="og:description" content="路径的差异Class和ClassLoader都提供了两种方法来加载资源  getResource(String): URL getResourceAsStream(String): InputStream  但使用Class加载资源和使用ClassLoader加载资源时填写相同的路径却会得到不同的结果 如下以使用getResource加载各种目录为例比较两者差异 Class方式123456789/">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2020-03-11T03:49:12.628Z">
+<meta property="og:updated_time" content="2020-03-11T07:00:45.606Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Java加载资源时的路径问题">
-<meta name="twitter:description" content="路径的差异Java中的Class、ClassLoader类都提供了getResource、getResourceAsStream方法来加载资源 但Class类和ClassLoader类在资源加载的路径上存在着差异 在当前用户的home目录下创建Maven项目resource-demo 并在项目下新建测试类joveleex.demo.App，编写代码测试 Class方式123456789// 通过C">
+<meta name="twitter:description" content="路径的差异Class和ClassLoader都提供了两种方法来加载资源  getResource(String): URL getResourceAsStream(String): InputStream  但使用Class加载资源和使用ClassLoader加载资源时填写相同的路径却会得到不同的结果 如下以使用getResource加载各种目录为例比较两者差异 Class方式123456789/">
 
 
 
@@ -360,49 +360,42 @@
       
 
       
-        <h1 id="路径的差异"><a href="#路径的差异" class="headerlink" title="路径的差异"></a>路径的差异</h1><p>Java中的<code>Class、ClassLoader</code>类都提供了<code>getResource、getResourceAsStream</code>方法来加载资源</p>
-<p>但<code>Class</code>类和<code>ClassLoader</code>类在资源加载的路径上存在着差异</p>
-<p>在当前用户的home目录下创建Maven项目<code>resource-demo</code></p>
-<p>并在项目下新建测试类<code>joveleex.demo.App</code>，编写代码测试</p>
+        <h1 id="路径的差异"><a href="#路径的差异" class="headerlink" title="路径的差异"></a>路径的差异</h1><p>Class和ClassLoader都提供了两种方法来加载资源</p>
+<ul>
+<li>getResource(String): URL</li>
+<li>getResourceAsStream(String): InputStream</li>
+</ul>
+<p>但使用Class加载资源和使用ClassLoader加载资源时填写相同的路径却会得到不同的结果</p>
+<p>如下以使用getResource加载各种目录为例比较两者差异</p>
 <h2 id="Class方式"><a href="#Class方式" class="headerlink" title="Class方式"></a>Class方式</h2><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 通过Class类的getResource方法加载资源</span></span><br><span class="line">System.out.println(App.class.getResource(<span class="string">""</span>));</span><br><span class="line">System.out.println(App.class.getResource(<span class="string">"./"</span>));</span><br><span class="line">System.out.println(App.class.getResource(<span class="string">"/"</span>));</span><br><span class="line"></span><br><span class="line"><span class="comment">// 控制台打印结果</span></span><br><span class="line">file:/Users/joveleex/resource-demo/target/classes/joveleex/demo/</span><br><span class="line">file:/Users/joveleex/resource-demo/target/classes/joveleex/demo/</span><br><span class="line">file:/Users/joveleex/resource-demo/target/classes/</span><br></pre></td></tr></table></figure>
 
-<ul>
-<li><p><code>&quot;&quot;</code>和<code>&quot;./&quot;</code>都表示当前<code>App.class</code>类文件所在的目录</p>
-</li>
-<li><p><code>&quot;/&quot;</code>表示<code>Classpath</code>的路径</p>
-</li>
-</ul>
-<h2 id="ClassLoader方式"><a href="#ClassLoader方式" class="headerlink" title="ClassLoader方式"></a>ClassLoader方式</h2><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 通过ClassLoader类的getResource方法加载资源</span></span><br><span class="line">System.out.println(App.class.getClassLoader().getResource(<span class="string">""</span>));</span><br><span class="line">System.out.println(App.class.getClassLoader().getResource(<span class="string">"./"</span>));</span><br><span class="line">System.out.println(App.class.getClassLoader().getResource(<span class="string">"/"</span>));</span><br><span class="line">System.out.println(App.class.getClassLoader().getResource(<span class="string">"/Users"</span>));</span><br><span class="line"></span><br><span class="line"><span class="comment">// 控制台打印结果</span></span><br><span class="line">file:/Users/joveleex/resource-demo/target/classes/</span><br><span class="line">file:/Users/joveleex/resource-demo/target/classes/</span><br><span class="line"><span class="keyword">null</span></span><br></pre></td></tr></table></figure>
+<h2 id="ClassLoader方式"><a href="#ClassLoader方式" class="headerlink" title="ClassLoader方式"></a>ClassLoader方式</h2><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 通过ClassLoader类的getResource方法加载资源</span></span><br><span class="line">System.out.println(App.class.getClassLoader().getResource(<span class="string">""</span>));</span><br><span class="line">System.out.println(App.class.getClassLoader().getResource(<span class="string">"./"</span>));</span><br><span class="line">System.out.println(App.class.getClassLoader().getResource(<span class="string">"/"</span>));</span><br><span class="line"></span><br><span class="line"><span class="comment">// 控制台打印结果</span></span><br><span class="line">file:/Users/joveleex/resource-demo/target/classes/</span><br><span class="line">file:/Users/joveleex/resource-demo/target/classes/</span><br><span class="line"><span class="keyword">null</span></span><br></pre></td></tr></table></figure>
 
-<ul>
-<li><p><code>&quot;&quot;</code>和<code>&quot;./&quot;</code>都表示<code>Classpath</code>的路径</p>
-</li>
-<li><p><code>&quot;/&quot;</code>没有对应的路径</p>
-</li>
-</ul>
 <h1 id="源码分析"><a href="#源码分析" class="headerlink" title="源码分析"></a>源码分析</h1><p>仅通过源码分析造成差异的原因，不探究加载资源的具体代码实现</p>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// Class类，源码基于JDK1.8</span></span><br><span class="line"><span class="keyword">public</span> java.net.<span class="function">URL <span class="title">getResource</span><span class="params">(String name)</span> </span>&#123;</span><br><span class="line">    name = resolveName(name);</span><br><span class="line">    ClassLoader cl = getClassLoader0();</span><br><span class="line">    <span class="keyword">if</span> (cl==<span class="keyword">null</span>) &#123;</span><br><span class="line">        <span class="comment">// A system class.</span></span><br><span class="line">        <span class="keyword">return</span> ClassLoader.getSystemResource(name);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> cl.getResource(name);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> URL <span class="title">getSystemResource</span><span class="params">(String name)</span> </span>&#123;</span><br><span class="line">    ClassLoader system = getSystemClassLoader();</span><br><span class="line">    <span class="keyword">if</span> (system == <span class="keyword">null</span>) &#123;</span><br><span class="line">        <span class="keyword">return</span> getBootstrapResource(name);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> system.getResource(name);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// ClassLoader类，源码基于JDK1.8</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> URL <span class="title">getResource</span><span class="params">(String name)</span> </span>&#123;</span><br><span class="line">    URL url;</span><br><span class="line">    <span class="keyword">if</span> (parent != <span class="keyword">null</span>) &#123;</span><br><span class="line">        url = parent.getResource(name);</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">        url = getBootstrapResource(name);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">if</span> (url == <span class="keyword">null</span>) &#123;</span><br><span class="line">        url = findResource(name);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> url;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
-<p>可以看到<code>Class</code>的<code>getResource</code>方法最终也是调用<code>ClassLoader</code>的<code>getResource</code>方法</p>
-<p>但两者最终返回的路径却存在差异，主要原因在于<code>getResource</code>方法内执行了<code>resolveName</code>方法</p>
-<p>虽然调用的都是<code>ClassLoader</code>的<code>getResource</code>方法，但传入的<code>name</code>参数的值已经不同了</p>
+<p>Class和ClassLoader使用的都是ClassLoader的方法去加载资源</p>
+<p>但Class使用resolveName对传入的参数做了特殊处理，从而导致了最终结果的不一致</p>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// Class类，源码基于JDK1.8</span></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * Add a package name prefix if the name is not absolute Remove leading "/"</span></span><br><span class="line"><span class="comment"> * if name is absolute</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="function"><span class="keyword">private</span> String <span class="title">resolveName</span><span class="params">(String name)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (name == <span class="keyword">null</span>) &#123;</span><br><span class="line">        <span class="keyword">return</span> name;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">if</span> (!name.startsWith(<span class="string">"/"</span>)) &#123;</span><br><span class="line">        Class&lt;?&gt; c = <span class="keyword">this</span>;</span><br><span class="line">        <span class="keyword">while</span> (c.isArray()) &#123;</span><br><span class="line">            c = c.getComponentType();</span><br><span class="line">        &#125;</span><br><span class="line">        String baseName = c.getName();</span><br><span class="line">        <span class="keyword">int</span> index = baseName.lastIndexOf(<span class="string">'.'</span>);</span><br><span class="line">        <span class="keyword">if</span> (index != -<span class="number">1</span>) &#123;</span><br><span class="line">            name = baseName.substring(<span class="number">0</span>, index).replace(<span class="string">'.'</span>, <span class="string">'/'</span>)</span><br><span class="line">                +<span class="string">"/"</span>+name;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">        name = name.substring(<span class="number">1</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> name;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
+<p>Class对填写的路径做了解析处理</p>
 <ul>
-<li><p><code>name</code>是相对的（不以<code>/</code>开头）：给<code>name</code>添加包名前缀</p>
+<li>对于以<code>/</code>开头的值去除<code>/</code></li>
+<li>对于不以<code>/</code>开头的值会添加当前类所在包的包名前缀</li>
+</ul>
+<h1 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h1><p>Class加载资源和ClassLoader加载资源调的都是ClassLoader的getResource/getResourceAsStream方法</p>
+<p>Class加载资源会对填写的路径做特殊处理，<code>/</code>开头去除<code>/</code>，否则添加类所在包的包名前缀</p>
+<p>Class加载资源</p>
+<ul>
+<li><p>填写的是相对路径：得到<strong>classpath路径</strong> + <strong>类所在的包路径</strong> + <strong>填写的路径</strong></p>
 </li>
-<li><p><code>name</code>是绝对的（即以<code>/</code>开头）：删除<code>name</code>开头的<code>/</code></p>
+<li><p>填写的是绝对路径：得到<strong>classpath路径</strong> + <strong>填写的路径</strong></p>
 </li>
 </ul>
-<h1 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h1><ul>
-<li><code>Class</code>其实是调用的<code>ClassLoader</code>内的方法去加载资源</li>
-<li><code>ClassLoader</code>加载资源时<code>name</code>参数是<code>/</code>开头的值最终会返回<code>null</code></li>
-<li><code>ClassLoader</code>传入的<code>name</code>最终都会拼接到<code>classpath</code>路径后形成最终路径</li>
-<li><code>Class</code>的方法会先对<code>name</code>解析，以<code>/</code>开头的路径会去除<code>/</code>防止<code>Classloader</code>返回<code>null</code>，不以<code>/</code>开头的路径会添加包名</li>
-</ul>
+<p>ClassLoader加载资源</p>
 <ul>
-<li><code>Class</code>加载资源，相对路径以所在包的路径作为相对路径，绝对路径以<code>classpath</code>路径作为根路径</li>
-<li><code>ClassLoader</code>加载资源，相对路径以<code>classpath</code>路径作为相对路径，不能使用绝对路径</li>
+<li>填写的是相对路径：得到<strong>classpath路径</strong> + <strong>填写的路径</strong></li>
+<li>填写的是绝对路径：<strong>null</strong></li>
 </ul>
 
       
